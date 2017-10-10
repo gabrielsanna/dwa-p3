@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/{hostname}/', 'ServerController@index');
+Route::get('/ip/{hostname}/', 'ServerController@get_ip_address');
