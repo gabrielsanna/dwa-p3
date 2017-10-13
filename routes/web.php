@@ -15,5 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/env', function () {
+    dump(config('app.name'));
+    dump(config('app.env'));
+    dump(config('app.debug'));
+    dump(config('app.url'));
+});
+
 Route::get('/{hostname}/', 'ServerController@index');
 Route::get('/ip/{hostname}/', 'ServerController@get_ip_address');
