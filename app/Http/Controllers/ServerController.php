@@ -13,6 +13,9 @@ class ServerController extends Controller
     }
 
     public function get_ip_address ($hostname) {
-    	return "The IP address for " . $hostname . " is 1.1.1.1";
+    	$dnsRecord = dns_get_record($hostname, DNS_A);
+		$ipAddress = $dnsRecord[0]['ip'];
+
+    	return view('servermanager.query')->with(['ip' => $ipAddress]);
     }
 }

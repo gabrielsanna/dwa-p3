@@ -22,6 +22,5 @@ Route::get('/env', function () {
     dump(config('app.url'));
 });
 
-Route::get('/{hostname}/', 'ServerController@index');
-Route::get('/ip/{hostname}/', 'ServerController@get_ip_address');
+Route::get('/ip/{hostname?}/', 'ServerController@get_ip_address');
 Route::any('/practice/{n?}', 'PracticeController@index');
