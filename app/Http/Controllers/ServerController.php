@@ -16,6 +16,6 @@ class ServerController extends Controller
     	$dnsRecord = dns_get_record($hostname, DNS_A);
 		$ipAddress = $dnsRecord[0]['ip'];
 
-    	return view('servermanager.query')->with(['ip' => $ipAddress]);
+    	return view('servermanager.query')->with(['ip' => $ipAddress, 'hostname' => $hostname]);
     }
 }
