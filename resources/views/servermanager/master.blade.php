@@ -10,18 +10,18 @@
     @stack('head')
 </head>
 <body>
+	<div id="wrapper">
+		<header>
+			<h1>Project 3</h1>
+		</header>
 
-	<header>
-		<h1>Project 3</h1>
-	</header>
+		<section>
+			@yield('content')
+		</section>
 
-	<section>
-		@yield('content')
-	</section>
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-    @stack('body')
-
+	    @stack('body')
+	</div>
 </body>
 </html>
