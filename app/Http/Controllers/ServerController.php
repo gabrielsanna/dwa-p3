@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 
 class ServerController extends Controller
 {
-	private $httpHeader;
+	# Properties
+    private $queryURL;
+    private $queryProtocol;
+    private $queryDataType;
+    private $httpHeader;
 
     public function index ($hostname) {
     	return "You are looking for " . $hostname;
@@ -24,7 +28,17 @@ class ServerController extends Controller
 	    	$dnsRecord = dns_get_record($hostname, DNS_A);
 			$ipAddress = $dnsRecord[0]['ip'];
 	    }
+/*
+	    if ($request->has('searchUrl')) {
+		    $this->queryURL = $searchUrl;
+    	    $this->queryProtocol = $searchUrl;
+        	$this->queryDataType = $dataToPull;
 
+	        if ($queryData == "all" || $queryData == "webserver" || $queryData == "setscookie") {
+    	    	$this->pull_http_header($url, $protocol);
+			}
+		}
+*/
 	    return view('servermanager.query')->with('resultArray', $resultArray);
     }
 
