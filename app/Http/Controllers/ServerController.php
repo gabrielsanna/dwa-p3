@@ -6,20 +6,17 @@ use Illuminate\Http\Request;
 
 class ServerController extends Controller
 {
-    //
+	private $httpHeader;
 
     public function index ($hostname) {
     	return "You are looking for " . $hostname;
     }
 
-    public function get_ip_address ($hostname) {
-    	$dnsRecord = dns_get_record($hostname, DNS_A);
-		$ipAddress = $dnsRecord[0]['ip'];
+    public function query (Request $request) {
+    	dump($request->all());
 
-    	return view('servermanager.query')->with(['ip' => $ipAddress, 'hostname' => $hostname]);
-    }
+		$hostname = null;
 
-    public function query ($hostname = null) {
     	if ($hostname == null) {
     		$resultArray = [];
     	}
@@ -31,13 +28,12 @@ class ServerController extends Controller
 	    return view('servermanager.query')->with('resultArray', $resultArray);
     }
 
-
     ###################################################################
 	# Query methods, for querying information about our target URL
 	###################################################################
 
     # Get an http header from the target URL
-    public function pull_http_header(string $hostname, string $webProtocol) {
+    private function pull_http_header(string $hostname, string $webProtocol) {
     	# Request an HTTP header and store as an array
 		$cmdOutput = shell_exec('curl -I '.$webProtocol.'://'.$address);
 		$cmdOutput = explode(PHP_EOL, $cmdOutput);
@@ -45,7 +41,7 @@ class ServerController extends Controller
 		$this->httpHeader = $cmdOutput;
     }
 
-    public function pull_ip_address($hostname) {
+    private function pull_ip_address($hostname) {
     	# Query the IP address; we'll just grab the first A record
 		$dnsRecord = dns_get_record($this->queryURL, DNS_A);
 		$ipAddress = $dnsRecord[0]['ip'];
@@ -53,7 +49,7 @@ class ServerController extends Controller
 		return $ipAddress;
     }
 
-    public function pull_webserver($hostname) {
+    private function pull_webserver($hostname) {
     	if (empty($this->httpHeader) == true) {
     		$this->httpHeader = $this->pull_http_header($this->queryURL, $this->queryProtocol);
     	}
@@ -71,7 +67,7 @@ class ServerController extends Controller
     	return $server;
     }
 
-    public function pull_sets_cookie($hostname) {
+    private function pull_sets_cookie($hostname) {
     	if (empty($this->httpHeader) == true) {
     		$this->httpHeader = $this->pull_http_header($this->address, $this->queryProtocol);
     	}
