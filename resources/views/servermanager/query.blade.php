@@ -5,16 +5,6 @@
 @endpush
 
 @section('content')
-	@if($ip)
-		<p>Hostname: {{ $hostname }}<br>
-	@else
-		<p>No hostname given</p>
-	@endif
-
-	@if($ip)
-		IP address: {{ $ip }}</p>
-	@endif
-
 	<form method='GET'>
 		<div class="form-group">
 			<label>Enter a web URL (required):</label>

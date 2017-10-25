@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/env', function () {
     dump(config('app.name'));
     dump(config('app.env'));
@@ -22,6 +18,6 @@ Route::get('/env', function () {
     dump(config('app.url'));
 });
 
-Route::get('/ip/{hostname?}/', 'ServerController@get_ip_address');
+Route::get('/{hostname?}/', 'ServerController@query');
 
 Route::any('/practice/{n?}', 'PracticeController@index');
