@@ -9,7 +9,7 @@ class ServerController extends Controller
 	# Properties
     private $queryURL;
     private $queryProtocol;
-    private $queryDataType;
+    private $queryData;
     private $httpHeader;
 
     public function index ($hostname) {
@@ -28,17 +28,19 @@ class ServerController extends Controller
 	    	$dnsRecord = dns_get_record($hostname, DNS_A);
 			$ipAddress = $dnsRecord[0]['ip'];
 	    }
-/*
-	    if ($request->has('searchUrl')) {
-		    $this->queryURL = $searchUrl;
-    	    $this->queryProtocol = $searchUrl;
-        	$this->queryDataType = $dataToPull;
 
-	        if ($queryData == "all" || $queryData == "webserver" || $queryData == "setscookie") {
-    	    	$this->pull_http_header($url, $protocol);
+	    if ($request->has('searchUrl')) {
+		    $this->queryURL = $request->input('searchUrl');
+    	    $this->queryProtocol = $request->input('searchUrl');
+        	$this->queryData = $request->input('dataToPull');
+
+	        if ($this->queryData == "all" || $this->queryData == "webserver" || $this->queryData == "setscookie") {
+    	    	$this->pull_http_header($this->queryURL, $this->queryProtocol);
 			}
+
+#			$resultArray = $this->get_array();
 		}
-*/
+
 	    return view('servermanager.query')->with('resultArray', $resultArray);
     }
 
@@ -49,7 +51,7 @@ class ServerController extends Controller
     # Get an http header from the target URL
     private function pull_http_header(string $hostname, string $webProtocol) {
     	# Request an HTTP header and store as an array
-		$cmdOutput = shell_exec('curl -I '.$webProtocol.'://'.$address);
+		$cmdOutput = shell_exec('curl -I '.$webProtocol.'://'.$hostname);
 		$cmdOutput = explode(PHP_EOL, $cmdOutput);
 
 		$this->httpHeader = $cmdOutput;
@@ -95,5 +97,24 @@ class ServerController extends Controller
     	}
 
     	return $cookie;
+    }
+
+    private function get_array() {
+    	# Build a keyed array of data to output
+		$resultArray = array(
+			"URL" => "$this->queryURL"
+		);
+
+		if ($this->queryDataType == "all" || $this->queryDataType == "webserver") {
+			$resultArray["Web server"] = $this->pull_webserver();
+		}
+		if ($this->queryDataType == "all" || $this->queryDataType == "ipaddress") {
+			$resultArray["IP address"] = $this->pull_ip_address();
+		}
+		if ($this->queryDataType == "all" || $this->queryDataType == "setscookie") {
+			$resultArray["Sets cookie"] = $this->pull_sets_cookie();
+		}
+
+		return $resultArray;
     }
 }
