@@ -12,11 +12,6 @@ class ServerController extends Controller
     	return "You are looking for " . $hostname;
     }
 
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
     public function get_ip_address ($hostname) {
     	$dnsRecord = dns_get_record($hostname, DNS_A);
 		$ipAddress = $dnsRecord[0]['ip'];
@@ -26,15 +21,14 @@ class ServerController extends Controller
 
     public function query ($hostname = null) {
     	if ($hostname == null) {
-    		$resultArray = ['test' => 'test2'];
-    		return view('servermanager.query')->with('resultArray', $resultArray);
+    		$resultArray = [];
     	}
     	else {
 	    	$dnsRecord = dns_get_record($hostname, DNS_A);
 			$ipAddress = $dnsRecord[0]['ip'];
-
-	    	return view('servermanager.query')->with(['ip' => $ipAddress, 'hostname' => $hostname]);
 	    }
+
+	    return view('servermanager.query')->with('resultArray', $resultArray);
     }
 
 
