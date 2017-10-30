@@ -17,14 +17,11 @@ class ServerController extends Controller
     }
 
     public function query (Request $request) {
-    	dump($request->all());
-
-		$hostname = null;
-
-    	if ($hostname == null) {
+    	if ($request->input('searchUrl') == null) {
     		$resultArray = [];
     	}
     	else {
+    		$hostname = $request->input('searchUrl');
 	    	$dnsRecord = dns_get_record($hostname, DNS_A);
 			$ipAddress = $dnsRecord[0]['ip'];
 	    }
@@ -38,7 +35,7 @@ class ServerController extends Controller
     	    	$this->pull_http_header($this->queryURL, $this->queryProtocol);
 			}
 
-#			$resultArray = $this->get_array();
+			$resultArray = $this->get_array();
 		}
 
 	    return view('servermanager.query')->with('resultArray', $resultArray);
@@ -57,7 +54,7 @@ class ServerController extends Controller
 		$this->httpHeader = $cmdOutput;
     }
 
-    private function pull_ip_address($hostname) {
+    private function pull_ip_address() {
     	# Query the IP address; we'll just grab the first A record
 		$dnsRecord = dns_get_record($this->queryURL, DNS_A);
 		$ipAddress = $dnsRecord[0]['ip'];
@@ -65,7 +62,7 @@ class ServerController extends Controller
 		return $ipAddress;
     }
 
-    private function pull_webserver($hostname) {
+    private function pull_webserver() {
     	if (empty($this->httpHeader) == true) {
     		$this->httpHeader = $this->pull_http_header($this->queryURL, $this->queryProtocol);
     	}
@@ -83,9 +80,9 @@ class ServerController extends Controller
     	return $server;
     }
 
-    private function pull_sets_cookie($hostname) {
+    private function pull_sets_cookie() {
     	if (empty($this->httpHeader) == true) {
-    		$this->httpHeader = $this->pull_http_header($this->address, $this->queryProtocol);
+    		$this->httpHeader = $this->pull_http_header($this->queryURL, $this->queryProtocol);
     	}
 
     	$cookie = "No";
@@ -105,13 +102,13 @@ class ServerController extends Controller
 			"URL" => "$this->queryURL"
 		);
 
-		if ($this->queryDataType == "all" || $this->queryDataType == "webserver") {
+		if ($this->queryData == "all" || $this->queryData == "webserver") {
 			$resultArray["Web server"] = $this->pull_webserver();
 		}
-		if ($this->queryDataType == "all" || $this->queryDataType == "ipaddress") {
+		if ($this->queryData == "all" || $this->queryData == "ipaddress") {
 			$resultArray["IP address"] = $this->pull_ip_address();
 		}
-		if ($this->queryDataType == "all" || $this->queryDataType == "setscookie") {
+		if ($this->queryData == "all" || $this->queryData == "setscookie") {
 			$resultArray["Sets cookie"] = $this->pull_sets_cookie();
 		}
 
