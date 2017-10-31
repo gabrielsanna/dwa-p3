@@ -12,11 +12,16 @@ class ServerController extends Controller
     private $queryData;
     private $httpHeader;
 
-    public function index ($hostname) {
-    	return "You are looking for " . $hostname;
-    }
-
     public function query (Request $request) {
+    	# Validate the request data
+#		$this->validate($request, [
+#        	'searchURL' => 'active_url',
+#    	]);
+
+    	$request->validate([
+        	'searchURL' => 'bail|active_url',
+    	]);
+
     	if ($request->input('searchUrl') == null) {
     		$resultArray = [];
     	}
