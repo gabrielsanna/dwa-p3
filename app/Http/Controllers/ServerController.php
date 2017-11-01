@@ -14,21 +14,16 @@ class ServerController extends Controller
 
     public function query (Request $request) {
     	# Validate the request data
-#		$this->validate($request, [
-#        	'searchURL' => 'active_url',
-#    	]);
-
-    	$request->validate([
-        	'searchURL' => 'bail|active_url',
-    	]);
 
     	if ($request->input('searchUrl') == null) {
     		$resultArray = [];
     	}
     	else {
+    		$this->validate($request, [
+        		'searchURL' => 'active_url',
+    		]);
+
     		$hostname = $request->input('searchUrl');
-	    	$dnsRecord = dns_get_record($hostname, DNS_A);
-			$ipAddress = $dnsRecord[0]['ip'];
 	    }
 
 	    if ($request->has('searchUrl')) {
