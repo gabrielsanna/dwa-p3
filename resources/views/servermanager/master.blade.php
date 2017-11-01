@@ -15,9 +15,7 @@
 			<h1>Project 3</h1>
 		</header>
 
-		<section>
-			@yield('content')
-		</section>
+		@yield('content')
 
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
